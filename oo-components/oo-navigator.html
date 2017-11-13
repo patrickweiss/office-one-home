@@ -1,0 +1,43 @@
+<!--Copyright by Schwarz auf Weiss AG-->
+<!--Import all Polymer Elements used in this page-->
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+<dom-module id="oo-navigator">
+  <template>
+    <link rel="stylesheet" type="text/css" href="/css/oo.css">
+    <div class="panel">
+        <a href="/index.html">oo [[appname]]</a> >> <a href="[[link1]]">[[label1]]</a>
+    </div>
+  </template>
+  <script>
+    class OoNavigator extends Polymer.GestureEventListeners(Polymer.Element) {
+      static get is() { return 'oo-navigator' }
+      static get properties() {
+        return {
+          appname: {
+            type: String,
+            reflectToAttribute: true,
+            observer: '_pageChanged',
+            notify: true
+          },
+          seitenname: {
+            type: String,
+            reflectToAttribute: true
+          }
+        }
+      }
+      constructor() {
+        super();
+        this.seitennamen = {
+          ausgabeErfassen: "Ausgabe erfassen",
+          einnahmeErfassen: "Einnahme erfassen",
+          driveOrdnerAnlegen: "Google Drive Ordner anlegen"
+        };
+      }
+      _pageChanged(page) {
+        this.seitenname = this.seitennamen[this.page];
+      }
+    }
+    customElements.define(OoNavigator.is, OoNavigator);
+  </script>
+</dom-module>

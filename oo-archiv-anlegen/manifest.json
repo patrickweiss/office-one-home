@@ -1,0 +1,6 @@
+{
+  "name": "oo-archiv-anlegen",
+  "short_name": "oo-archiv-anlegen",
+  "start_url": "/oo-archiv-anlegen",
+  "display": "standalone"
+}

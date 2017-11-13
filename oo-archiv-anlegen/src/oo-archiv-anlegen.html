@@ -1,0 +1,64 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<link rel="import" href="/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+
+
+<dom-module id="oo-archiv-anlegen">
+  <template>
+    <link rel="stylesheet" type="text/css" href="/css/oo.css">
+    <style is="custom-style">
+      paper-button.green {
+        background-color: var(--paper-green-500);
+        color: white;
+      }
+    </style>
+    <div class="panel">
+      <h1>Dokumentenarchiv in Google Drive Ordner anlegen</h1>
+      <paper-input id="ordnername" label="Ordnername, z.B: Patrick Weiss IT-Consulting Belege"></paper-input>
+      <paper-button class="green" on-tap="einloggen">Ordner in Google Drive anlegen</paper-button>
+    </div>    
+  </template>
+
+  <script>
+    class OoArchivAnlegen extends Polymer.Element {
+      static get is() { return 'oo-archiv-anlegen'; }
+      static get properties() {
+        return {
+           page: {
+            type: String,
+            reflectToAttribute: true,
+            notify:true
+          }
+        };
+      }
+      ready() {
+        super.ready();
+        OOClient.registerSignOnStatusListener(this);
+      }  
+      signOnStatusChanged(isSignedIn, that) {
+       OOServer.initializeServerAndClient(that.$.ordnername.value,that.initializeClient);
+       that.page="ausgabeErfassen";
+      }
+      initializeClient(resp){
+        mobilelog(JSON.stringify(resp));
+      }
+      einloggen(){
+        console.log("Benutzer wird eingeloggt");
+        gapi.auth2.getAuthInstance().signIn();
+     }
+    }
+
+    window.customElements.define(OoArchivAnlegen.is, OoArchivAnlegen);
+  </script>
+</dom-module>

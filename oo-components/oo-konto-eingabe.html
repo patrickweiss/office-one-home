@@ -1,0 +1,83 @@
+<!--Copyright by Schwarz auf Weiss AG-->
+<!--Import all Polymer Elements used in this page-->
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+
+<dom-module id="oo-konto-eingabe">
+  <template>
+   <link rel="stylesheet" type="text/css" href="/css/oo.css">
+      <style type="text/css">
+      td{
+        height:70px;
+        width:70px;
+        font-size: 30px;
+        text-align: center;
+       border: 1px solid black;
+      }
+    </style>
+       <h1>Konto</h1>
+          <h3>Wählen Sie das Konto, worauf die Ausgabe gebucht werden soll
+            <h3>
+  <table>
+    <tbody>
+      
+     
+
+      <tr>
+        <td on-tap="kontoSetzen"><a href="[[naechsteseite]]"><div id="0"></div></a></td>
+        <td on-tap="kontoSetzen"><a href="[[naechsteseite]]"><div id="1"></div></a></td>
+      </tr>
+      
+   
+     
+    
+    </tbody>
+  </table>
+
+  </template>
+
+  <script>
+  /*global polymer,OOC */
+    class OoKontoEingabe extends Polymer.GestureEventListeners(Polymer.Element) {
+      static get is() { return 'oo-konto-eingabe' }
+      static get properties() {
+        return {
+          konto: {
+            type: Object,
+            notify: true,
+            reflectToAttribute: true
+          },
+          naechsteseite: {
+            type: String,
+            notify: true,
+            reflectToAttribute: true
+          }
+          
+        }
+      }
+
+      constructor() {
+        /*global OOBusinessObjects
+        */
+        super();
+        this.konten =OOC.BM.konten;
+         console.log(this.konten);
+      }
+      
+      ready() {
+        super.ready();
+        this.$["0"].textContent = this.konten[0].ID;
+        this.$["1"].textContent = this.konten[1].ID;
+      }
+      
+      kontoSetzen(e) {
+        this.konto=e.target.textContent;
+      }
+
+   
+    }
+
+
+    customElements.define(OoKontoEingabe.is, OoKontoEingabe);
+  </script>
+</dom-module>

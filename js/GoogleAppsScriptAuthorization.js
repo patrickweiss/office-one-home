@@ -11,7 +11,7 @@ var DISCOVERY_DOCS_AppsScript = ["https://script.googleapis.com/$discovery/rest?
 var SCOPES = 'https://www.googleapis.com/auth/drive.metadata.readonly https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/drive.appdata';
 
 
-/*global gapi,OOClient*/
+/*global gapi,OOC*/
 /**
 *  On load, called to load the auth2 library and API client library.
 */
@@ -43,12 +43,12 @@ function initClientAppsScript() {
  */
 function updateSigninStatus(isSignedIn) {
   console.log("Google login Status AppsScriptApi:"+isSignedIn);
-  //if (!isSignedIn)gapi.auth2.getAuthInstance().signIn();
+  /*if (!isSignedIn)gapi.auth2.getAuthInstance().signIn();
   if (isSignedIn){
     callScriptFunction("getFolderById");
     OOGoogleConnector.getOrCreateOOFolder();
-  }
-  OOClient.signOnStatusChanged(isSignedIn);
+  }*/
+  OOC.signOnStatusChanged(isSignedIn);
 }
 /*gibt Ordner im Rootfolder des Benutzer auf der Console aus, um zu testen ob Rest Aufruf funktioniert*/
 function callScriptFunction(functionName,parameters) {

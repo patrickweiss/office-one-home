@@ -1,0 +1,84 @@
+<!--Copyright by Schwarz auf Weiss AG-->
+<!--Import all Polymer Elements used in this page-->
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+<dom-module id="oo-buchungsperiode-eingabe">
+  <template>
+    <link rel="stylesheet" type="text/css" href="/css/oo.css">
+    <style type="text/css">
+      td{
+        height:30px;
+        width:70px;
+        font-size: 15px;
+        text-align: center;
+       border: 1px solid black;
+      }
+      table{
+        width:100%;
+      
+      }
+    </style>
+      <h1>Buchungsperiode</h1>
+            <h3>Wählen Sie den Monat, für den Sie neue Ausgaben erfassen möchten<h3>
+    
+    <table>
+      <tbody>
+     
+        <tr>
+          <td on-tap="monatSetzen"><a href="[[naechsteseite]]">Januar</a></td>
+          <td on-tap="monatSetzen"><a href="[[naechsteseite]]">Februar</a></td>
+        </tr>
+        <tr>
+          <td on-tap="monatSetzen"><a href="[[naechsteseite]]">März</a></td>
+          <td on-tap="monatSetzen"><a href="[[naechsteseite]]">April</a></td>
+        </tr>
+        <tr>
+          <td on-tap="monatSetzen"><a href="[[naechsteseite]]">Mai</a></td>
+          <td on-tap="monatSetzen"><a href="[[naechsteseite]]">Juni</a></td>
+        </tr>
+        <tr>
+          <td on-tap="monatSetzen"><a href="[[naechsteseite]]">Juli</a></td>
+          <td on-tap="monatSetzen"><a href="[[naechsteseite]]">August</a></td>
+        </tr>
+        <tr>
+          <td on-tap="monatSetzen"><a href="[[naechsteseite]]">September</a></td>
+          <td on-tap="monatSetzen"><a href="[[naechsteseite]]">Oktober</a></td>
+        </tr>
+        <tr>
+          <td on-tap="monatSetzen"><a href="[[naechsteseite]]">November</a></td>
+          <td on-tap="monatSetzen"><a href="[[naechsteseite]]">Dezember</a></td>
+        </tr>
+      </tbody>
+    </table> 
+  </template>
+
+  <script>
+    class OoBuchungsperiodeEingabe extends Polymer.GestureEventListeners(Polymer.Element) {
+      static get is() { return 'oo-buchungsperiode-eingabe' }
+      static get properties() {
+        return {
+          monat: {
+            type: String,
+            notify: true,
+            reflectToAttribute: true
+          },
+          naechsteseite: {
+            type: String,
+            notify: true,
+            reflectToAttribute: true
+          }
+        }
+      }
+      constructor() {
+        super();
+        this.monat = "";
+      }
+      monatSetzen(e) {
+        this.monat=e.target.textContent;
+        this.dispatchEvent(new CustomEvent('buchungsperiode-speichern', {detail: {monat: this.monat}}));
+      }
+    }
+    customElements.define(OoBuchungsperiodeEingabe.is, OoBuchungsperiodeEingabe);
+  </script>
+</dom-module>

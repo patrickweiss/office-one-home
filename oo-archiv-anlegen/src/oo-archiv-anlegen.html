@@ -24,13 +24,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
     <div class="panel">
-      <h1>Dokumentenarchiv in Google Drive Ordner anlegen</h1>
+      <h1 id="ueberschrift">Dokumentenarchiv in Google Drive Ordner anlegen</h1>
+        <!--Add buttons to initiate auth sequence and sign out-->
+    <button id="authorizebutton" on-click="handleAuthClick" style="display: none;">Authorize</button>
+    <button id="signoutbutton" on-click="handleSignoutClick" style="display: none;">Sign Out</button>
+
       <paper-input id="ordnername" label="Ordnername, z.B: Patrick Weiss IT-Consulting Belege"></paper-input>
-      <paper-button class="green" on-tap="einloggen">Ordner in Google Drive anlegen</paper-button>
+      <paper-button id="anlegenbutton" class="green" on-tap="ordneranlegen">Ordner in Google Drive anlegen</paper-button>
     </div>    
   </template>
 
   <script>
+  /*global OOC,gapi,Polymer, OOS*/
     class OoArchivAnlegen extends Polymer.Element {
       static get is() { return 'oo-archiv-anlegen'; }
       static get properties() {
@@ -44,19 +49,46 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
       ready() {
         super.ready();
-        OOClient.registerSignOnStatusListener(this);
-      }  
-      signOnStatusChanged(isSignedIn, that) {
-       OOServer.initializeServerAndClient(that.$.ordnername.value,that.initializeClient);
-       that.page="ausgabeErfassen";
+        OOC.registerSignOnStatusListener(this);
+        this.signOnStatusChanged(OOC.isSignedIn,this);
       }
-      initializeClient(resp){
-        mobilelog(JSON.stringify(resp));
-      }
-      einloggen(){
-        console.log("Benutzer wird eingeloggt");
+      handleAuthClick(event) {
         gapi.auth2.getAuthInstance().signIn();
-     }
+      }
+      handleSignoutClick(event) {
+        gapi.auth2.getAuthInstance().signOut();
+      }
+      signOnStatusChanged(isSignedIn,htmlElement){
+        if (isSignedIn) {
+          this.$.authorizebutton.style.display = 'none';
+          this.$.signoutbutton.style.display = 'block';
+          this.$.ordnername.style.display= 'block';
+          this.$.anlegenbutton.style.display= 'block';
+          if (OOC.BM.rootFolder.driveId!==""){
+            this.$.ordnername.value=OOC.BM.rootFolder.driveName;
+            this.ordnerIstAngelegt(this);
+          }
+
+        } else {
+          this.$.authorizebutton.style.display = 'block';
+          this.$.signoutbutton.style.display = 'none';
+          this.$.ordnername.style.display= 'none';
+          this.$.anlegenbutton.style.display= 'none';
+        }
+        console.log("signOnStatusChanged:"+isSignedIn);
+        console.log(htmlElement);
+        console.log(this);
+      }
+      ordneranlegen(){
+        console.log("Ordner wird gesucht oder angelegt:"+this.$.ordnername.value);
+        OOC.getOrCreateRootFolder(this.$.ordnername.value,this,this.ordnerIstAngelegt);
+      }
+      ordnerIstAngelegt(self){
+        self.$.ordnername.style.display= 'none';
+        self.$.anlegenbutton.style.display= 'none';
+        self.$.ueberschrift.innerHTML=
+        "Ihr office one Dokumentenarchiv befindet sich im Google Drive Ordner: <a href=\"https://drive.google.com/open?id="+OOC.BM.rootFolder.driveId+"\">"+self.$.ordnername.value+"</a>";
+      }
     }
 
     window.customElements.define(OoArchivAnlegen.is, OoArchivAnlegen);

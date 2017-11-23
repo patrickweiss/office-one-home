@@ -1,0 +1,59 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+
+<dom-module id="oo-photo-eingabe">
+  <template>
+   <link rel="stylesheet" type="text/css" href="/css/oo.css">
+   <h1>Belegfoto</h1>
+    <input id="belegdatei" type="file" accept="image/*" capture="environment" on-change="zeigeBeleg">
+    <img id="beleg" src="{{belegurl}}" alt="Belegfoto" width="100%" />
+  </template>
+
+  <script>
+  /*global Polymer,globaleBelegDatei*/
+    class OoPhotoEingabe extends Polymer.GestureEventListeners(Polymer.Element) {
+      static get is() { return 'oo-photo-eingabe'; }
+      static get properties() {
+        return {
+
+          belegurl: {
+            type: Object,
+            notify: true,
+            reflectToAttribute: true
+          },
+          naechsteseite: {
+            type: String,
+            notify: true,
+            reflectToAttribute: true
+          }
+          
+        };
+      }
+      
+      zeigeBeleg(){
+        var belegbild = this.$.beleg;
+        this.belegurl = "test";
+        var that=this;
+         console.log("zeigeBeleg");
+        if (this.$.belegdatei.files && this.$.belegdatei.files[0]){
+          //Global in preRender definiert. hierfür muss ich noch eine bessere Lösung finden
+        //  globaleBelegDatei=this.$.belegdatei.files[0];
+          var reader = new FileReader();
+          
+          reader.onload = function (e){ 
+            belegbild.src = e.target.result;
+            that.belegurl = belegbild.src;
+          };
+          reader.readAsDataURL(this.$.belegdatei.files[0]);  
+        }
+      }
+      
+     
+    
+    
+    }
+
+
+    customElements.define(OoPhotoEingabe.is, OoPhotoEingabe);
+  </script>
+</dom-module>

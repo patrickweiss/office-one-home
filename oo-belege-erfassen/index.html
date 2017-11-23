@@ -4,12 +4,20 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-    <title>oo-archiv-anlegen</title>
+    <title>oo-belege-erfassen</title>
     <meta name="description" content="oo-archiv-anlegen description">
 
     <!-- See https://goo.gl/OOhYW5 -->
-    <link rel="manifest" href="/oo-archiv-anlegen/manifest.json">
+    <link rel="manifest" href="/oo-belege-erfassen/manifest.json">
 
+   <script>
+      /**
+       * Root directory of tricorder app. See Polymer Starter Kit documentation, if you want to change it
+       */
+      window.Polymer = { rootPath: '/oo-belege-erfassen' };
+ 
+    </script>
+  
     <script src="/bower_components/webcomponentsjs/webcomponents-loader.js"></script>
     <script src="/js/OOClient.js"></script>
 
@@ -18,10 +26,10 @@
    -->
 
 
-    <link rel="import" href="/oo-archiv-anlegen/src/oo-archiv-anlegen-app.html">
+    <link rel="import" href="/oo-belege-erfassen/src/oo-belege-erfassen-app.html">
   </head>
   <body>
-    <oo-archiv-anlegen-app></oo-archiv-anlegen-app>
+    <oo-belege-erfassen-app></oo-belege-erfassen-app>
   </body>
   
   <!-- Load API to connect to Google Apps of the user -->

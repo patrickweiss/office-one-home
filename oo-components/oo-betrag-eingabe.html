@@ -1,0 +1,93 @@
+<!--Copyright by Schwarz auf Weiss AG-->
+<!--Import all Polymer Elements used in this page-->
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+<dom-module id="oo-betrag-eingabe">
+  <template>
+    <link rel="stylesheet" type="text/css" href="/css/oo.css">
+    <!-- Betrag wird schon in Echtzeit in oo-ausgabe-satz angezeigt, deshalb hier nicht unbedingt nötig...
+    <table>
+      <tbody>
+        <tr>
+          <td  height="70px"><h1><div id="Betrag">[[betrag]] €</div></h1>
+         
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    -->
+    <style type="text/css">
+      td{
+        height:70px;
+        width:70px;
+        font-size: 30px;
+        text-align: center;
+       border: 1px solid black;
+      }
+    </style>
+    <h1>Betrag</h1>
+    <table>
+      <tbody>
+        <tr>
+          <td on-tap="updatebetrag">1</td>
+          <td on-tap="updatebetrag">2</td>
+          <td on-tap="updatebetrag">3</td>
+        </tr>
+        <tr>
+          <td on-tap="updatebetrag" >4</td>
+          <td on-tap="updatebetrag" >5</td>
+          <td on-tap="updatebetrag" >6</td>
+        </tr>
+        <tr>
+          <td on-tap="updatebetrag">7</td>
+          <td on-tap="updatebetrag">8</td>
+          <td on-tap="updatebetrag">9</td>
+        </tr>
+        <tr>
+          <td on-tap="updatebetrag" height="70px">0</td>
+          <td on-tap="updatebetrag" height="70px">,</td>
+          <td on-tap="deleteNumber" height="70px"><</td>
+        </tr>
+      </tbody>
+    </table>
+      
+      
+  
+   <a href="[[naechsteseite]]">weiter</a></td>
+      
+   
+  </template>
+
+  <script>
+    class OoBetragEingabe extends Polymer.GestureEventListeners(Polymer.Element) {
+      static get is() { return 'oo-betrag-eingabe' }
+      static get properties() {
+        return {
+          betrag: {
+            type: String,
+            notify: true,
+            reflectToAttribute: true
+          },
+          naechsteseite: {
+            type: String,
+            notify: true,
+            reflectToAttribute: true
+          }
+        }
+      }
+      constructor() {
+        super();
+        this.betrag = "";
+      }
+      updatebetrag(e) {
+        var taste = e.target.textContent;
+        this.betrag += taste;
+      }
+      deleteNumber() {
+        this.betrag = this.betrag.slice(0, -1);
+        //  document.getElementById("Betrag").innerHTML = betrag + " €";
+      }
+    }
+    customElements.define(OoBetragEingabe.is, OoBetragEingabe);
+  </script>
+</dom-module>

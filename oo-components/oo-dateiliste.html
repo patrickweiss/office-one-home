@@ -1,0 +1,68 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+
+<dom-module id="oo-dateiliste">
+  <template>
+    <link rel="stylesheet" type="text/css" href="/css/oo.css">
+    <div class="panel" id="panel">    Dateiliste
+
+    <div id="belegliste">
+     
+    </div>
+    </div>
+  </template>
+
+  <script>
+    /**
+     * `oo-dateiliste`
+     * Element, um Dateien eines Google Drive Ordners aufzulisten
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class OoDateiliste extends Polymer.Element {
+      static get is() { return 'oo-dateiliste'; }
+      static get properties() {
+        return {
+            folderid: {
+            value:"",
+            type: String,
+            reflectToAttribute: true,
+            notify:true,
+            observer: '_folderidChanged'
+          }
+        };
+      }
+      _folderidChanged(){
+        if (this.folderid!=="")this.beleglisteAktualisieren();
+        else this.$.panel.style.display="none";
+      }
+      beleglisteAktualisieren(){
+        this.$.panel.style.display="block";
+        var belegArray = OO.getAusgabenInMonat(this.buchungsperiode,"test");
+        var htmlListe = this.makeUL(belegArray);
+        this.$.belegliste.replaceChild(htmlListe,this.$.belegliste.childNodes[0])
+      }
+      makeUL(array) {
+        // Create the list element:
+        var list = document.createElement('ul');
+
+        for (var i = 0; i < array.length; i++) {
+          // Create the list item:
+          var item = document.createElement('li');
+
+          // Set its contents:
+          item.appendChild(document.createTextNode(array[i]));
+
+          // Add it to the list:
+          list.appendChild(item);
+        }
+
+        // Finally, return the constructed list:
+        return list;
+      }
+    }
+
+    window.customElements.define(OoDateiliste.is, OoDateiliste);
+  </script>
+</dom-module>

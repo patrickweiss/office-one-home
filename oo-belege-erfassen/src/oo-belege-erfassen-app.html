@@ -1,0 +1,84 @@
+<!--Copyright by Schwarz auf Weiss AG-->
+<!--Import all Polymer Elements used in this page-->
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<link rel="import" href="/bower_components/app-route/app-location.html">
+<link rel="import" href="/bower_components/app-route/app-route.html">
+<link rel="import" href="/bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="/bower_components/iron-selector/iron-selector.html">
+<!--Import all office one (oo) pages used in this page-->
+<link rel="import" href="/oo-components/oo-navigator.html">
+<link rel="import" href="oo-ausgabe-erfassen.html">
+
+<dom-module id="oo-belege-erfassen-app">
+  <template>
+    <link rel="stylesheet" type="text/css" href="/css/oo.css">
+
+    <!--  <p>officeone-app.path:[[path]]</p> -->
+    <!--When the URL changes then the values of "route" and "page" will be updated-->
+    <app-location route="{{route}}" path="{{path}}" url-space-regex="^[[rootPath]]"></app-location>
+    <app-route route="{{route}}" pattern="[[rootPath]]:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
+    
+    <!--When the navigator updates "page" then this component will be notified and the page attribute will be updated -->
+    <!-- only navigator and content produce html in this app -->
+ 
+    <oo-navigator appname="Belege erfassen"></oo-navigator>
+    <oo-ausgabe-erfassen></oo-ausgabe-erfassen>
+
+  </template>
+
+  <script>
+    class OoBelegeErfassenApp extends Polymer.Element {
+      static get is() { return 'oo-belege-erfassen-app'; }
+      static get properties() {
+        return {
+          page: {
+            type: String,
+            reflectToAttribute: true,
+            observer: '_pageChanged',
+          },
+          dateneingabe: {
+            type: Object,
+            reflectToAttribute: true,
+          },
+          routeData: {
+            type:Object,
+            reflectToAttribute: true
+          },
+          subroute: String,
+          // This shouldn't be neccessary, but the Analyzer isn't picking up
+          // Polymer.Element#rootPath
+          rootPath: String,
+        };
+      }
+      static get observers() {
+        return [
+          '_routePageChanged(routeData.page)',
+        ];
+      }
+
+      _routePageChanged(page) {
+       this.page = page || 'start';
+       console.log("Seitenwechsel: "+this.page);
+      }
+
+      _pageChanged(page) {
+        // Load page import on demand. Show 404 page if fails
+        /* aktivieren wir wieder, wenn wir kapiert haben wie das funktioniert
+        var resolvedPageUrl = this.resolveUrl('my-' + page + '.html');
+        Polymer.importHref(
+            resolvedPageUrl,
+            null,
+            this._showPage404.bind(this),
+            true);
+            */
+      }
+
+      _showPage404() {
+        this.page = 'view404';
+      }
+    }
+
+    window.customElements.define(OoBelegeErfassenApp.is, OoBelegeErfassenApp);
+  </script>
+</dom-module>
+

@@ -1,0 +1,81 @@
+<!--Copyright by Schwarz auf Weiss AG-->
+<!--Import all Polymer Elements used in this page-->
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<link rel="import" href="/bower_components/app-route/app-location.html">
+<link rel="import" href="/bower_components/app-route/app-route.html">
+<link rel="import" href="/bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="/bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="/bower_components/app-storage/app-localstorage/app-localstorage-document.html">
+
+<!--Import all office one (oo) components used in this page-->
+<link rel="import" href="/oo-components/oo-ausgabe-satz.html">
+<link rel="import" href="/oo-components/oo-dateiliste.html">
+<link rel="import" href="/oo-components/oo-buchungsperiode-eingabe.html">
+<link rel="import" href="/oo-components/oo-betrag-eingabe.html">
+<link rel="import" href="/oo-components/oo-konto-eingabe.html">
+<link rel="import" href="/oo-components/oo-photo-eingabe.html">
+<!--Import all office one (oo) pages used in this page-->
+<link rel="import" href="oo-view404.html">
+
+<dom-module id="oo-ausgabe-erfassen">
+  <template>
+    <link rel="stylesheet" type="text/css" href="/css/oo.css">
+    <app-location route="{{route}}" path="{{path}}" url-space-regex="^[[rootPath]]"></app-location>
+    <app-route route="{{route}}" pattern="[[rootPath]]/:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
+    
+    <app-localstorage-document key="buchungsperiode" data="{{buchungsperiode}}"></app-localstorage-document>
+    <oo-dateiliste folderid="[[folderid]]"></oo-dateiliste>
+    <oo-ausgabe-satz buchungsperiode="[[buchungsperiode]]" betrag="[[betrag]]" konto="[[konto]]" belegurl="{{belegurl}}"></oo-ausgabe-satz>
+  
+    <iron-pages class="panel" selected="[[page]]" attr-for-selected="name" fallback-selection="view404" role="main" >
+      <oo-buchungsperiode-eingabe on-buchungsperiode-speichern="speichern" name="buchungsperiode" monat={{buchungsperiode}} naechsteseite="/oo-belege-erfassen/betrag"></oo-buchungsperiode-eingabe>
+      
+      <oo-betrag-eingabe          name="betrag"          betrag={{betrag}}         naechsteseite="/oo-belege-erfassen/konto"></oo-betrag-eingabe>
+      
+      <oo-konto-eingabe           name="konto"           konto={{konto}}           naechsteseite="/oo-belege-erfassen/photo"></oo-konto-eingabe>
+      <oo-photo-eingabe id="photo"name="photo"           belegurl={{belegurl}}           naechsteseite="/oo-belege-erfassen/upload" ></oo-photo-eingabe>
+      <oo-view404 name="view404"></oo-view404>
+    </iron-pages>
+    <h1>rootPath:[[rootPath]], page:[[page]]</h1>
+  </template>
+<script>
+/*global Polymer */
+    class OoAusgabeErfassen extends Polymer.Element {
+      static get is() { return 'oo-ausgabe-erfassen'; }
+      static get properties() {
+        return {
+          page: {
+            type: String,
+            reflectToAttribute: true,
+          },
+          routeData: Object,
+          subroute: String,
+          // This shouldn't be neccessary, but the Analyzer isn't picking up
+          // Polymer.Element#rootPath
+          rootPath: String,
+        };
+      }
+      static get observers() {
+        return [
+          '_routePageChanged(routeData.page)',
+        ];
+      }
+      _routePageChanged(page) {
+        this.page = page || 'buchungsperiode';
+        console.log("oo-ausgabe-erfassen._routePageChanged: " + this.page);
+      }
+      speichern(e) {
+        console.log("Buchungsperiode speichern wurde ausgeführt");
+        console.log(e.detail.monat);
+        /*
+        var state = loadState();
+        state["Buchungsperiode"]=e.detail.monat;
+        storeState(state);
+       */
+      }
+    }
+    
+   
+    window.customElements.define(OoAusgabeErfassen.is, OoAusgabeErfassen);
+  </script>
+</dom-module>

@@ -1,0 +1,87 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+
+<dom-module id="oo-ausgabe-satz">
+  <template>
+    <link rel="stylesheet" type="text/css" href="/css/oo.css">
+    <div class="panel">
+      <a href="ausgabeErfassen/buchungsperiode">[[buchungsperiode]]</a> * 
+      <a href="ausgabeErfassen/betrag">[[betrag]]</a> * 
+      <a href="ausgabeErfassen/konto">[[konto]]</a> * 
+      <a href="ausgabeErfassen/photo"><img id="beleg" src="{{belegurl}}" alt="Belegfoto" href="ausgabeErfassen/photo" width="20" heigth="15"/></a> *
+      <a href="[[ausgabeSpeichernURI]]" id="speichern" on-click="speichern" style="visibility:hidden;">Speichern</a>
+    </div>
+  </template>
+
+  <script>
+  /*global OOC */
+  /*global Polymer*/
+  
+    class OoAusgabeSatz extends Polymer.Element {
+      static get is() { return 'oo-ausgabe-satz'; }
+      static get properties() {
+        return {
+          buchungsperiode: {
+            value:"Buchungsperiode",
+            type: String,
+            reflectToAttribute: true,
+            notify:true,
+            observer: '_ausgabeChanged'
+          },
+          betrag: {
+            value:"Betrag",
+            type: String,
+            reflectToAttribute: true,
+            notify:true,
+            observer: '_ausgabeChanged'
+          },
+          konto: {
+            value:"Konto",
+            type: String,
+            reflectToAttribute: true,
+            notify:true,
+            observer: '_ausgabeChanged'
+          },
+          belegurl: {
+            value:"Belegfoto.png",
+            type: String,
+            reflectToAttribute: true,
+            notify:true,
+            observer: '_ausgabeChanged'
+          }
+        };
+      }
+      ready() {
+        super.ready();
+        OOC.registerSignOnStatusListener(this);
+      }    
+      signOnStatusChanged(isSignedIn,that){
+        console.log("oo-ausgabe-satz.signOnStatusChanged.isSignedIn:"+isSignedIn);
+        console.log("oo-ausgabe-satz.signOnStatusChanged.that:"+that);
+        if (isSignedIn){
+          that.ausgabeSpeichernURI="/oo-beleg-erfassen/betrag";
+          
+        }else{
+          that.ausgabeSpeichernURI="driveOrdnerAnlegen";
+        }
+      }
+      
+      _ausgabeChanged(){
+        console.log(this.buchungsperiode+this.betrag+this.konto);
+        if (this.buchungsperiode!=="Buchungsperiode" && this.betrag!=="" && this.konto!=="Konto" && this.belegurl!=="Belegfoto.png"){
+          this.$.speichern.style.visibility="visible";
+          console.log("Buchungssatz vollstaendig");
+        }else this.$.speichern.style.visibility="hidden";
+        
+      }
+      speichern(){
+        if (this.ausgabeSpeichernURI==="driveOrdnerAnlegen")return;
+        OOC.addAusgabe(this.buchungsperiode,this.betrag,this.konto,this.belegurl);
+        this.belegurl="Belegfoto.png";
+      }
+      
+     
+    }
+
+    window.customElements.define(OoAusgabeSatz.is, OoAusgabeSatz);
+  </script>
+</dom-module>
